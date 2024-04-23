@@ -9,15 +9,12 @@ import { map } from "rxjs/operators";
 export class CategoryService {
   constructor(private afs: AngularFirestore, private toster: ToastrService) {}
 
-  saveCategory(data) {
-    this.afs
-      .collection("categories")
-      .add(data)
-      .then((ref) => {
-        this.toster.success("New Category added successfully");
-      });
+  getCategorie(id: string) {
+    return this.afs
+      .doc("categories/" + id)
+      .get()
+      .pipe(map((docSnapshot) => docSnapshot.data()));
   }
-
   getCategories() {
     return this.afs
       .collection("categories")
@@ -32,11 +29,26 @@ export class CategoryService {
         })
       );
   }
+  saveCategory(data) {
+    this.afs
+      .collection("categories")
+      .add(data)
+      .then((ref) => {
+        this.toster.success("New Category added successfully");
+      });
+  }
 
-  updateCategory(id: string, updatedData: string) {
+  updateCategory(
+    id: string,
+    updatedCategoryName: string,
+    updatedCategoryDescription: string
+  ) {
     this.afs
       .doc("categories/" + id)
-      .update({ categori: updatedData })
+      .update({
+        categori: updatedCategoryName,
+        description: updatedCategoryDescription,
+      })
       .then(() => {
         this.toster.success(" Category Updated successfully");
       });

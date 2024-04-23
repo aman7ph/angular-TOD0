@@ -25,6 +25,7 @@ export class CategoryComponent implements OnInit {
     "#BC243C",
     "#DA5552",
   ];
+  categoryDescription: string = "";
   categorieName: string = "";
   updateStatus: string = "Add";
   categories: Array<object>;
@@ -41,6 +42,7 @@ export class CategoryComponent implements OnInit {
       let random = Math.floor(Math.random() * this.color.length);
       let todoCategory = {
         categori: f.value.categoryName,
+        description: f.value.categoryDescription,
         colorCode: this.color[random],
         todoCount: 0,
       };
@@ -49,21 +51,22 @@ export class CategoryComponent implements OnInit {
     } else {
       this.CategoryService.updateCategory(
         this.categoryId,
-        f.value.categoryName
+        f.value.categoryName,
+        f.value.categoryDescription
       );
       f.resetForm();
       this.updateStatus = "Add";
     }
   }
 
-  onEdit(id: string, categori: string) {
+  onEdit(id: string, categori: string, description: string) {
     this.categoryId = id;
     this.updateStatus = "Update";
     this.categorieName = categori;
+    this.categoryDescription = description;
   }
 
   onDelete(id: string) {
-    console.log("lovv");
     this.CategoryService.deleteCategory(id);
   }
 }

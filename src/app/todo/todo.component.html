@@ -2,48 +2,89 @@
   <div class="col-md-4 text-center">
     <h1>TODOS</h1>
     <p class="text-info">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, voluptatum?
+      Efficient task organizer with intuitive design for streamlined
+      productivity management.
     </p>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    <form action="" class="form-inline">
+    <form
+      #f="ngForm"
+      (ngSubmit)="f.form.valid && onSubmit(f)"
+      class="form-inline"
+    >
       <div class="col-md-10 form-group">
         <input
           type="text"
           placeholder="Add New Todo here"
           name="todoText"
           class="form-control-plaintext drop-shadow"
+          [(ngModel)]="todoValue"
+          required
+          #todo="ngModel"
+          [ngClass]="{ 'border-danger': f.submitted && todo.invalid }"
         />
       </div>
       <button
         type="submit"
         class="btn btn-primary col-md-2 btn-todo btn-block drop-shadow"
       >
-        Add
+        {{ updateStatus }}
       </button>
+      <div
+        class="text-danger ml-3"
+        *ngIf="f.submitted && todo.invalid && todo.errors.required"
+      >
+        Todo is Required
+      </div>
     </form>
   </div>
 </div>
 
 <div class="row justify-content-center todo-list">
   <div class="col-md-6">
-    <div class="card">
+    <div class="card" *ngFor="let item of todos">
       <div class="card-body">
         <div class="clearfix">
           <div class="float-left text-secondary">
-            <i class="far fa-circle text-danger"></i>
-            <i class="fas fa-check text-success"></i>
-            New Todo
+            <i
+              class="far fa-circle text-danger"
+              *ngIf="!item.data.isCompleted"
+            ></i>
+            <i
+              class="fas fa-check text-success"
+              *ngIf="item.data.isCompleted"
+            ></i>
+
+            <ng-container *ngIf="item.data.isCompleted; else normalText">
+              <s>{{ item.data.todo }}</s>
+            </ng-container>
+            <ng-template #normalText>
+              {{ item.data.todo }}
+            </ng-template>
           </div>
           <div class="float-right">
-            <i class="far fa-check-circle text-success"></i>
-            <i class="far fa-times-circle text-danger"></i>
+            <i
+              class="far fa-check-circle text-success"
+              (click)="onComplet(item.id)"
+              *ngIf="!item.data.isCompleted"
+            ></i>
+            <i
+              class="far fa-times-circle text-danger"
+              (click)="onUnComplet(item.id)"
+              *ngIf="item.data.isCompleted"
+            ></i>
             <div class="todo-tools">
               <small>
-                <i class="fas fa-pencil-alt text-warning"></i>
-                <i class="fas fa-trash text-danger"></i>
+                <i
+                  class="fas fa-pencil-alt text-warning"
+                  (click)="onEdit(item.id, item.data.todo)"
+                ></i>
+                <i
+                  class="fas fa-trash text-danger"
+                  (click)="onDelete(item.id)"
+                ></i>
               </small>
             </div>
           </div>

@@ -20,10 +20,24 @@
           placeholder="Add New Categories here"
           name="categoryName"
           class="form-control-plaintext drop-shadow"
+          style="margin: 1rem 0rem"
           [(ngModel)]="categorieName"
           required
           #category="ngModel"
           [ngClass]="{ 'border-danger': f.submitted && category.invalid }"
+        />
+        <input
+          type="text"
+          placeholder="Add Description For The Categories here"
+          name="categoryDescription"
+          class="form-control-plaintext drop-shadow"
+          style="margin: 1rem 0rem"
+          [(ngModel)]="categoryDescription"
+          required
+          #categoryDiscrption="ngModel"
+          [ngClass]="{
+            'border-danger': f.submitted && categoryDiscrption.invalid
+          }"
         />
       </div>
       <button
@@ -34,9 +48,15 @@
       </button>
       <div
         class="text-danger ml-3"
-        *ngIf="f.submitted && category.invalid && category.errors.required"
+        *ngIf="
+          f.submitted &&
+          category.invalid &&
+          category.errors.required &&
+          categoryDiscrption.invalid &&
+          categoryDiscrption.errors.required
+        "
       >
-        Category is Required
+        Category And Category Descriptionis Required
       </div>
     </form>
   </div>
@@ -56,7 +76,9 @@
             <small
               ><i
                 class="fa fa-pencil-alt text-success"
-                (click)="onEdit(item.id, item.data.categori)"
+                (click)="
+                  onEdit(item.id, item.data.categori, item.data.description)
+                "
               ></i
             ></small>
             <small
@@ -67,11 +89,9 @@
             ></small>
           </div>
         </div>
-        <div class="todo-content">
+        <div class="todo-content" [routerLink]="['/todo', item.id]">
           <h3 [style.color]="item.data.colorCode">{{ item.data.categori }}</h3>
-          <small class="text-secondary">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.</small
-          >
+          <small class="text-secondary"> {{ item.data.description }}</small>
         </div>
         <span class="badge badge-danger">{{ item.data.todoCount }} Todos</span>
       </div>
